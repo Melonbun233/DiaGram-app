@@ -9,10 +9,21 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.ewd.diagram.R;
+import com.example.ewd.diagram.utils.CustomViewPager;
+import com.example.ewd.diagram.utils.ViewPagerAdapter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class NavigationActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
+    @BindView(R.id.navigation)
+    BottomNavigationView navigation;
+
+    @BindView(R.id.viewpager)
+    CustomViewPager viewPager;
+
+    ViewPagerAdapter viewPagerAdapter;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -21,13 +32,25 @@ public class NavigationActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+
+                    viewPager.setCurrentItem(0);
+
                     return true;
                 case R.id.navigation_timeline:
-                    mTextMessage.setText(R.string.title_timeline);
+
+                    viewPager.setCurrentItem(1);
+
                     return true;
                 case R.id.navigation_profile:
-                    mTextMessage.setText(R.string.title_profile);
+
+                    viewPager.setCurrentItem(2);
+
+                    return true;
+                case R.id.navigation_post:
+
+                    viewPager.setCurrentItem(3);
+
+
                     return true;
             }
             return false;
@@ -39,11 +62,38 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
+        ButterKnife.bind(this);
         Intent i = getIntent();
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        setupViewPagerAdapter();
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
     }
+
+    /**
+     * Method that sets up ViewPagerAdapter
+     */
+    private void setupViewPagerAdapter() {
+        viewPagerAdapter = new ViewPagerAdapter(NavigationActivity.this.getSupportFragmentManager());
+
+        //Creating instances of all fragments
+        FeedFragment feedFragment = FeedFragment.newInstance(47, 47);
+        TimelineFragment timelineFragment = TimelineFragment.newInstance(47, 47);
+        UserFragment userFragment = UserFragment.newInstance(47, 47);
+        AddPostFragment addPostFragment = AddPostFragment.newInstance(47, 47);
+
+        //Add all fragments to viewpager adapter
+        viewPagerAdapter.addFragment(feedFragment, "Feed");
+        viewPagerAdapter.addFragment(timelineFragment, "Timeline");
+        viewPagerAdapter.addFragment(userFragment, "User");
+        viewPagerAdapter.addFragment(addPostFragment, "Add post");
+
+        viewPager.setPagingEnabled(false);
+        viewPager.setAdapter(viewPagerAdapter);
+
+    }
+
 
 }
