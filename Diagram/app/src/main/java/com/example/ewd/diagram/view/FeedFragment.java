@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,7 +39,7 @@ import retrofit2.Response;
  * Use the {@link FeedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FeedFragment extends Fragment implements PostAdapter.ListItemClickListener {
+public class FeedFragment extends Fragment implements PostAdapter.ListItemClickListener,  SwipeRefreshLayout.OnRefreshListener {
 
     // The fragment initialization parameters
     private static final String USER_ID = "USER_ID";
@@ -47,6 +48,9 @@ public class FeedFragment extends Fragment implements PostAdapter.ListItemClickL
 
     @BindView(R.id.recycler_view_posts)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.swipe_to_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     PostAdapter mPostAdapter;
 
@@ -104,34 +108,21 @@ public class FeedFragment extends Fragment implements PostAdapter.ListItemClickL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        /*Create handle for the RetrofitInstance interface*/
-        ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
-
-        String token = "Bearer " + sessionKey;
-        Log.d("SESSION KEY", token);
-
-        Call<List<Post>> call = service.getAllPosts(token);
-
-        call.enqueue(new Callback<List<Post>>() {
-            @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-
-                if (response.isSuccessful()) {
-
-                    mPostAdapter.setPostsData(response.body());
-
-                } else {
-
-                    Toast.makeText(getActivity(), "Session Expired", Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        /**
+         * Showing Swipe Refresh animation on activity create
+         * As animation won't start on onCreate, post runnable is used
+         */
+        mSwipeRefreshLayout.post(new Runnable() {
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
+            public void run() {
 
-                Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                mSwipeRefreshLayout.setRefreshing(true);
+
+
+                // Fetching data from server
+                loadDataToRecyclerView();
             }
         });
 
@@ -155,6 +146,59 @@ public class FeedFragment extends Fragment implements PostAdapter.ListItemClickL
         mRecyclerView.setAdapter(mPostAdapter);
 
     }
+
+    public void loadDataToRecyclerView() {
+
+        // Showing refresh animation before making http call
+        mSwipeRefreshLayout.setRefreshing(true);
+
+        /*Create handle for the RetrofitInstance interface*/
+        ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+
+        String token = "Bearer " + sessionKey;
+        Log.d("SESSION KEY", token);
+
+        Call<List<Post>> call = service.getAllPosts(token);
+
+        call.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+
+                if (response.isSuccessful()) {
+
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    mPostAdapter.setPostsData(response.body());
+
+                } else {
+
+                    Toast.makeText(getActivity(), "Session Expired", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+
+                Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+    }
+
+    /**
+     * This method is called when swipe refresh is pulled down
+     */
+    @Override
+    public void onRefresh() {
+
+        // Fetching data from server
+        loadDataToRecyclerView();
+    }
+
+
+
 
     @Override
     public void onListItemClick(Post post) {
