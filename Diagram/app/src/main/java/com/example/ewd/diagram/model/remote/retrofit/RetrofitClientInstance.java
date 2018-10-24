@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientInstance {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://diagram.com/";
+    private static final String BASE_URL = "http://40.83.209.30";
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {

@@ -52,12 +52,28 @@
             </LinearLayout>
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="Email"/>
+                android:hint="First Name"/>
 
+            <EditText
+                android:id="@+id/last_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Last Name"
+
+                />
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Username"
+
+                />
             <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
@@ -66,6 +82,17 @@
                 android:hint="Password"
 
                 />
+
+            <EditText
+                android:id="@+id/access_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Access Code"
+
+                />
+
+
 
             <Button
                 android:id="@+id/sign_up"

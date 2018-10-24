@@ -21,8 +21,8 @@ public class AddPostFragment extends Fragment {
     private static final String USER_ID = "USER_ID";
     private static final String SESSION_KEY = "SESSION_KEY";
 
-    private int userId;
-    private int sessionKey;
+    private String userId;
+    private String sessionKey;
 
     public AddPostFragment() {
         // Required empty public constructor
@@ -35,11 +35,11 @@ public class AddPostFragment extends Fragment {
      * @param sessionKey Parameter 2.
      * @return A new instance of fragment AddPostFragment.
      */
-    public static AddPostFragment newInstance(int userId, int sessionKey) {
+    public static AddPostFragment newInstance(String userId, String sessionKey) {
         AddPostFragment fragment = new AddPostFragment();
         Bundle args = new Bundle();
-        args.putInt(USER_ID, userId);
-        args.putInt(SESSION_KEY, sessionKey);
+        args.putString(USER_ID, userId);
+        args.putString(SESSION_KEY, sessionKey);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,8 +48,8 @@ public class AddPostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userId = getArguments().getInt(USER_ID);
-            sessionKey = getArguments().getInt(SESSION_KEY);
+            userId = getArguments().getString(USER_ID);
+            sessionKey = getArguments().getString(SESSION_KEY);
         }
     }
 

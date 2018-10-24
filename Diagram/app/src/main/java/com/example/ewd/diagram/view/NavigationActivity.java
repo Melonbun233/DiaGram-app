@@ -25,6 +25,9 @@ public class NavigationActivity extends AppCompatActivity {
 
     ViewPagerAdapter viewPagerAdapter;
 
+    private String token;
+    private String userId;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -63,7 +66,9 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
 
         ButterKnife.bind(this);
-        Intent i = getIntent();
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
+        userId = intent.getStringExtra("userId");
 
         setupViewPagerAdapter();
 
@@ -79,10 +84,10 @@ public class NavigationActivity extends AppCompatActivity {
         viewPagerAdapter = new ViewPagerAdapter(NavigationActivity.this.getSupportFragmentManager());
 
         //Creating instances of all fragments
-        FeedFragment feedFragment = FeedFragment.newInstance(47, 47);
-        TimelineFragment timelineFragment = TimelineFragment.newInstance(47, 47);
-        UserFragment userFragment = UserFragment.newInstance(47, 47);
-        AddPostFragment addPostFragment = AddPostFragment.newInstance(47, 47);
+        FeedFragment feedFragment = FeedFragment.newInstance(userId, token);
+        TimelineFragment timelineFragment = TimelineFragment.newInstance(userId, token);
+        UserFragment userFragment = UserFragment.newInstance(userId, token);
+        AddPostFragment addPostFragment = AddPostFragment.newInstance(userId, token);
 
         //Add all fragments to viewpager adapter
         viewPagerAdapter.addFragment(feedFragment, "Feed");
@@ -94,6 +99,4 @@ public class NavigationActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
 
     }
-
-
 }
