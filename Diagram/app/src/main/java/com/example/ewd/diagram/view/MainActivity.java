@@ -25,6 +25,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/*
+ * COMMENT : Henry Zeng
+ *      I am not familiar with android/java, so maybe I am incorrect for the following comment. Just ignore this one if 
+ *      I'm wrong.
+ *      I cannot find the code that you store users' info, so I am not sure if users close the app, and the session hasn't expired, 
+ *      will they be able to sign in silently the next time they open it?
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -96,8 +103,15 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                /*
+                 * COMMENT : Henry Zeng
+                 *      I do think those functions realative to request/response should be put in a separate 
+                 *      file (maybe in utils directory) as they are highly resusable. 
+                 /
+
                 //Body for API call
                 LoginCredentials loginCredentials = new LoginCredentials(username, password);
+
 
                 /*Create handle for the RetrofitInstance interface*/
                 ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);

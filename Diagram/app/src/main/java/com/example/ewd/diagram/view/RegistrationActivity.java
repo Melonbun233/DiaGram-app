@@ -82,6 +82,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 accessCode = accessCodeEditText.getText().toString();
 
 
+                /*
+                 *  COMMENT : Henry Zeng
+                 *      I think it would would be better if you can also check the input doesn't contain
+                 *      any sql command (or other command used to modify database). This check can prevent SQL injection.
+                 */
+                
                 //Checking if fields are empty
                 if (TextUtils.isEmpty(firstName)) {
 
